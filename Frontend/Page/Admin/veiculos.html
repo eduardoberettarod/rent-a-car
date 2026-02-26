@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="veiculos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+
+    <div class="sidebar show">
+
+        <div class="sidebar-header">
+            <div>
+                <img src="../../image/icone.png" alt="logo de caminhão">
+            </div>
+            <div>
+                <h1>Rent a Car</h1>
+            </div>
+            <div>
+                <button type="button">
+                    <i class="bi bi-arrow-right-short"></i>
+                </button>
+            </div>
+        </div>
+
+
+        <div class="sidebar-content">
+
+            <div>
+                <p class="text-muted">MENU</p>
+            </div>
+
+            <div>
+                <a href="veiculos.html">
+                    <i class="bi bi-car-front me-2"></i>
+                    <span>Veículos</span>
+                </a>
+
+                <a href="">
+                    <i class="bi bi-calendar-check me-2"></i>
+                    <span>Agendamentos</span>
+                </a>
+
+                <a href="">
+                    <i class="bi bi-people me-2"></i>
+                    <span>Usuários</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <div>
+                <span class="fw-bold">
+                    Nome de Usuario
+                </span>
+                <span>
+                    Cargo
+                </span>
+            </div>
+
+            <div>
+                <a href="../LoginAdmin/login.html" class="d-flex gap-2 align-items-center">
+                    <i class="bi bi-box-arrow-right fs-6"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO -->
+    <div class="content p-4 ms-5 mt-5">
+
+        <div class="justify-content-between d-flex align-items-center">
+            <div>
+                <h2>Veículos</h2>
+                <h6 class="text-muted">Conheça nossa frota de carros.</h6>
+            </div>
+
+            <div>
+                <button class="d-flex align-items-center btn btn-warning gap-2 rounded-3" id="btn-cadastrar-carro"
+                    data-bs-toggle="modal" data-bs-target="#CadastroCarroModal">
+                    Cadastrar novo carro <i class="bi bi-plus fs-5"></i>
+                </button>
+            </div>
+        </div>
+        <hr class="text-muted mt-4">
+
+        <div class="mt-5 justify-content-between d-flex align-items-center">
+            <div>
+                <h4 class=" text-muted">Encontre o carro ideal para você.</h4>
+            </div>
+
+            <div>
+                <div class="dropdown">
+                    <button class="btn btn-warning gap-2 rounded-3 dropdown-toggle" data-bs-toggle="dropdown"
+                        aria-expanded="false" id="btn-filtro">
+                        Filtro
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Básico</a></li>
+                        <li><a class="dropdown-item" href="#">Família</a></li>
+                        <li><a class="dropdown-item" href="#">Luxo</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="CadastroCarroModal" tabindex="-1" aria-labelledby="CadastroCarroModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content">
+                <div class="modal-header p-4">
+                    <h1 class="modal-title fs-5" id="CadastroCarroModalLabel">
+                        Cadastro para um novo carro.
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <!-- LADO ESQUERDO - FOTO -->
+                        <div class="col-md-6">
+
+                            <div class="image-preview-container text-center">
+                                <div id="preview-foto" class="image-preview"></div>
+                            </div>
+
+                        </div>
+
+                        <!-- LADO DIREITO - FORM -->
+                        <div class="col-md-6">
+
+                            <form id="formCadastroCarro" class="row g-3">
+
+                                <div class="col-12">
+                                    <label for="modelo" class="form-label">
+                                        Modelo
+                                    </label>
+                                    <input type="text" class="form-control py-2" id="modelo">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="marca" class="form-label">
+                                        Marca
+                                    </label>
+                                    <input type="text" class="form-control py-2" id="marca">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="placa" class="form-label">
+                                        Placa
+                                    </label>
+                                    <input type="text" class="form-control py-2" id="placa">
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="categoria" class="form-label">Categoria</label>
+
+                                    <select class="form-select py-2" id="categoria">
+                                        <option selected disabled>
+                                            Selecione a categoria
+                                        </option>
+                                        <option value="basico">Básico</option>
+                                        <option value="luxo">Luxo</option>
+                                        <option value="familia">Família</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="foto" class="form-label">
+                                        Foto
+                                    </label>
+                                    <input type="text" class="form-control py-2" id="foto"
+                                        placeholder="Cole o caminho da imagem">
+                                </div>
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn" style="background-color:#ffc20c; font-weight:600;">
+                        Cadastrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="admin.js"></script>
+    <script src="veiculos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
