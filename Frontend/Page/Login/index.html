@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Locadora de Veículos</title>
+    <link rel="stylesheet" href="../Login/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+    <main class="tudo">
+
+        <div class="card card-login p-4">
+
+            <img src="../../image/icone.png" alt="ícone de caminhão" class="icone">
+
+            <div class="text-center">
+                <h2 class="titulo">Encontre o veículo certo para você!</h2>
+                <p class="texto">Preencha as informações abaixo</p>
+            </div>
+
+            <form class="row g-3 needs-validation" id="form-reserva" novalidate>
+                <div class="col-12">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome_cliente" required>
+                    <div class="invalid-feedback">
+                        Por favor insira um nome válido.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">E-mail</label>
+                    <input type="text" class="form-control" id="email_cliente" required>
+                    <div class="invalid-feedback">
+                        Por favor insira um email válido.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Selecione o tipo de veículo</label>
+                    <select class="form-select" id="categoria" required>
+                        <option>Básico</option>
+                        <option>Família</option>
+                        <option>Luxo</option>
+                    </select>
+                </div>
+                <div class="col-12">
+                    <button class="btn btn-warning py-2 w-100" type="submit" id="btn-reserva">FAZER MINHA RESERVA</button>
+                </div>
+            </form>
+
+        </div>
+        <div id="col2">
+            <h1 class="oferta">VOCÊ PODE ALUGAR ESSE VEÍCULO POR R$ <strong class="destaque">99</strong> / DIA</h1>
+            <p class="texto-oferta">Válido para todo território nacional</p>
+            <img src="../../image/renault-kwid.png" alt="Renault Kwid">
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

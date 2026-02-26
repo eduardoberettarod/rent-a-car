@@ -1,0 +1,57 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.icone {
+    width: 40px;
+    position: relative;
+    transform: translateX(-50%);
+    left: 50%;
+}
+
+.card-login {
+    width: 400px;
+}
+
+.titulo{
+    font-size: 32px;
+    margin-top: 14px;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.texto{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+
+#col2{
+    max-width: 700px;   
+    margin-left: 39px;
+}
+
+.oferta{
+    font-size: 36px;
+    font-weight: bold;
+    color:white;
+}
+
+.destaque{
+    color: #445EE5;
+}
+
+.texto-oferta{
+    font-size: 20px;
+    margin-top: 10px
+}
+
+.tudo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #ffc107;
+}
