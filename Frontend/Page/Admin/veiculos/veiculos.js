@@ -7,7 +7,7 @@ inputFoto.addEventListener("input", () => {
     if (inputFoto.value.trim() !== "") {
         preview.style.backgroundImage = `url('${inputFoto.value}')`
     } else {
-        preview.style.backgroundImage = "url('../../image/fundo.jpeg')"
+        preview.style.backgroundImage = "url('../../../image/fundo.jpeg')"
     }
 })
 
@@ -86,11 +86,13 @@ function fnCadastrarVeiculos() {
     }
     console.dir(formDados)
 
-    fetch('http://localhost:3000/veiculos/', {
+    fetch('http://127.0.0.1:3000/veiculos/', {
         method: 'POST',
+        credentials: "include",
         headers: { 'Content-type': 'application/json' },
         body: JSON.stringify(formDados)
     })
+
         .then(resposta => resposta.json())
         .then((dados) => {
             fnLimparCampos()
@@ -105,12 +107,28 @@ function fnCarregarDados() {
     document.querySelector(".lista-veiculos").innerHTML = ""
 
 
-    fetch('http://localhost:3000/veiculos/', { method: 'GET' })
-        .then(response => response.json())
+    fetch('http://127.0.0.1:3000/veiculos/', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    
+        .then(response => {
+
+            if (response.status === 401) {
+                window.location.href = "../../LoginAdmin/login.html";
+                return;
+            }
+
+            return response.json();
+        })
         .then((veiculos) => {
+
+            if (!veiculos) return;
+
             veiculos.forEach(veiculo => {
                 fnMontarCardCarro(veiculo)
             });
+
         })
         .catch(erro => console.log(erro.message))
 }

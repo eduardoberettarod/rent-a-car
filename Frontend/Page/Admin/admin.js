@@ -13,12 +13,12 @@ toggleBtn.addEventListener("click", () => {
 
 })
 
-const currentPage = window.location.pathname.split("/").pop()
+const currentPath = window.location.pathname
 
 document.querySelectorAll(".sidebar-content a").forEach(link => {
-    const linkPage = link.getAttribute("href").split("?")[0]
+    const linkPath = new URL(link.href).pathname
 
-    if (linkPage === currentPage) {
+    if (linkPath === currentPath) {
         link.classList.add("active")
     }
 })

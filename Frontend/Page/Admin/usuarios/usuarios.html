@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo</title>
-    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="../admin.css">
+    <link rel="stylesheet" href="usuarios.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
@@ -17,7 +18,7 @@
 
         <div class="sidebar-header">
             <div>
-                <img src="../../image/icone.png" alt="logo de caminhão">
+                <img src="../../../image/icone.png" alt="logo de caminhão">
             </div>
             <div>
                 <h1>Rent a Car</h1>
@@ -37,17 +38,17 @@
             </div>
 
             <div>
-                <a href="veiculos.html">
+                <a href="../veiculos/veiculos.html">
                     <i class="bi bi-car-front me-2"></i>
                     <span>Veículos</span>
                 </a>
 
-                <a href="">
+                <a href="../agendamentos/agendamentos.html">
                     <i class="bi bi-calendar-check me-2"></i>
                     <span>Agendamentos</span>
                 </a>
 
-                <a href="">
+                <a href="../usuarios/usuarios.html">
                     <i class="bi bi-people me-2"></i>
                     <span>Usuários</span>
                 </a>
@@ -65,7 +66,7 @@
             </div>
 
             <div>
-                <a href="../LoginAdmin/login.html" class="d-flex gap-2 align-items-center">
+                <a href="../../LoginAdmin/login.html" class="d-flex gap-2 align-items-center">
                     <i class="bi bi-box-arrow-right fs-6"></i>
                     <span>Sair</span>
                 </a>
@@ -74,12 +75,33 @@
     </div>
 
     <!-- CONTEÚDO -->
-    <div class="content p-4">
-        <h1>Meu Dashboard</h1>
+    <div class="content p-4 ms-5 mt-5">
+
+        <div class="justify-content-between d-flex align-items-center">
+            <div>
+                <h2>Usuários</h2>
+                <h6 class="text-muted">Gerencie os usuários.</h6>
+            </div>
+        </div>
+        <hr class="text-muted mt-4">
+
+        <div class="mt-5 justify-content-between d-flex align-items-center mb-5">
+            <div>
+                <h4 class=" text-muted">Controle os usuários do sistema.</h4>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row lista-usuarios"></div>
+        </div>
+
     </div>
 
-
-    <script src="admin.js"></script>
+    <script src="../admin.js"></script>
+    <script src="usuarios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>
