@@ -43,4 +43,40 @@ app.post("/reserva/", function (req, res) {
     });
 })
 
+app.get("/veiculos", function (req, res) {
+
+    conexao.query(`
+        SELECT 
+            v.id,
+            v.modelo,
+            v.marca,
+            v.placa,
+            v.foto,
+            c.nome AS categoria,
+            c.valor_diaria
+        FROM veiculos v
+        JOIN categorias c 
+            ON v.categoria_id = c.id
+    `, function (erro, resultado) {
+
+        if (erro) {
+            console.log(erro)
+            res.status(500).json(erro)
+        } else {
+            res.json(resultado)
+        }
+
+    })
+})
+
+app.post("/veiculos", function (req, res) {
+    const data = req.body;
+    conexao.query('INSERT INTO veiculos set ?', [data], function (erro, resultado) {
+        if (erro) {
+            res.json(erro)
+        }
+        res.send(resultado.insertId)
+    })
+})
+
 app.listen(3000)

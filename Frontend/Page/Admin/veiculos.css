@@ -19,3 +19,77 @@
     border-color: #ffc20c !important;
     box-shadow: 0 0 0 0.2rem rgba(255, 194, 12, 0.25) !important;
 }
+
+.card-car {
+    width: 100%;
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 2px 3px 7px rgba(0, 0, 0, 0.2);
+    transition: 0.3s all ease;
+}
+
+.card-car:hover {
+    border: 1px solid #ffc20c;
+    transition: 0.3s all ease;
+    transform: translateY(-5px);
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card-car-header {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.card-car-header h4 {
+    font-size: 1.4rem;
+    margin-bottom: 0;
+}
+
+.card-car-header button {
+    border: none;
+    background-color: transparent;
+}
+
+.card-car-image-container {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.card-car-image-container img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.card-car-content {
+    position: relative;
+}
+
+.valor-diaria {
+    font-size: 1.6rem;
+    margin-bottom: 0;
+}
+
+.placa {
+    font-size: 1rem;
+}
+
+.categoria {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background-color: #ffc20c;
+    color: #000;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+}

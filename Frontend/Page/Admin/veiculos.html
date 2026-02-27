@@ -92,7 +92,7 @@
         </div>
         <hr class="text-muted mt-4">
 
-        <div class="mt-5 justify-content-between d-flex align-items-center">
+        <div class="mt-5 justify-content-between d-flex align-items-center mb-5">
             <div>
                 <h4 class=" text-muted">Encontre o carro ideal para você.</h4>
             </div>
@@ -110,6 +110,10 @@
                     </ul>
                 </div>
             </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row lista-veiculos gx-3"></div>
         </div>
 
     </div>
@@ -171,9 +175,9 @@
                                         <option selected disabled>
                                             Selecione a categoria
                                         </option>
-                                        <option value="basico">Básico</option>
-                                        <option value="luxo">Luxo</option>
-                                        <option value="familia">Família</option>
+                                        <option value="1">Básico</option>
+                                        <option value="2">Luxo</option>
+                                        <option value="3">Família</option>
                                     </select>
                                 </div>
 
@@ -193,7 +197,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn" style="background-color:#ffc20c; font-weight:600;">
+
+                    <button type="button" class="btn" id="btn-cadastrar-veiculo" style="background-color:#ffc20c; font-weight:600;">
                         Cadastrar
                     </button>
                 </div>

@@ -28,24 +28,14 @@ let btn_reserva = document.getElementById("btn-reserva")
 
 document.getElementById("form-reserva")
 .addEventListener("submit", function(e){
+
     e.preventDefault()
+
+    if (!this.checkValidity()) {
+        this.classList.add("was-validated")
+        return
+    }
+
+    this.classList.add("was-validated")
     fnReservarCarro()
 })
-
-//Validação do bootstrap
-(() => {
-  'use strict'
-
-  const forms = document.querySelectorAll('.needs-validation')
-
-  Array.from(forms).forEach(form => {
-    form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
-      }
-
-      form.classList.add('was-validated')
-    }, false)
-  })
-})()
