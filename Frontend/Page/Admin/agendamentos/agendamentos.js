@@ -10,7 +10,7 @@ function fnMontarTabelaAgendamento(cliente) {
 
             <td class="py-2 text-center align-middle">${cliente.veiculo_id}</td>
 
-            <td class="py-2 text-center align-middle">${new Date(cliente.data_reserva).toLocaleDateString('pt-BR')}</td>
+            <td class="py-2 text-center align-middle">${new Date(cliente.created_at).toLocaleDateString('pt-BR')}</td>
 
             <td class="py-2 text-center align-middle">${cliente.valor_diaria_reserva}</td>
 

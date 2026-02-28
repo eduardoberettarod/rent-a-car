@@ -32,7 +32,7 @@ app.get('/', function (req, res) {
 
 let mysql = require('mysql')
 let conexao = mysql.createConnection({
-    host: "10.125.44.41",
+    host: "localhost",
     user: "root",
     password: "",
     database: "bd_locadora"
@@ -57,6 +57,40 @@ app.post("/reserva/", function (req, res) {
         res.send(resultado.insertId)
     });
 })
+
+app.post("/registro", async function (req, res) {
+
+    try {
+
+        const { login, senha } = req.body;
+
+        const senhaHash = await bcrypt.hash(senha, 10);
+
+        const novoUsuario = {
+            login: login,
+            senha: senhaHash,
+            nivel_acesso: "operador"
+        };
+
+        conexao.query(
+            "INSERT INTO usuarios SET ?",
+            [novoUsuario],
+            function (erro, resultado) {
+
+                if (erro) {
+                    console.log(erro);
+                    return res.status(500).json("Erro ao registrar usuário");
+                }
+
+                res.json("Usuário registrado com sucesso");
+            }
+        );
+
+    } catch (erro) {
+        console.log(erro);
+        res.status(500).json("Erro no servidor");
+    }
+});
 
 app.get("/veiculos-select", function (req, res) {
 
@@ -145,7 +179,7 @@ app.get("/usuarios", verificarLogin, function (req, res) {
     )
 })
 
-app.delete("/usuarios/:id", verificarLogin, function (req, res) {
+app.delete("/usuarios/:id", verificarLogin, verificarAdmin, function (req, res) {
 
     const id = req.params.id;
 
@@ -177,24 +211,28 @@ app.post("/agendamentos", function (req, res) {
 
 app.get("/agendamentos", verificarLogin, function (req, res) {
 
-    conexao.query(
-        `SELECT id,
-        nome_cliente,
-        email_cliente,
-        veiculo_id,
-        data_reserva,
-        valor_diaria_reserva
-        FROM agendamentos`,
-        function (erro, resultado) {
+    conexao.query(`
+        SELECT 
+            a.id,
+            a.nome_cliente,
+            a.email_cliente,
+            a.veiculo_id,
+            a.created_at,
+            c.valor_diaria AS valor_diaria_reserva
+        FROM agendamentos a
+        INNER JOIN veiculos v 
+            ON a.veiculo_id = v.id
+        INNER JOIN categorias c 
+            ON v.categoria_id = c.id
+    `, function (erro, resultado) {
 
-            if (erro) {
-                console.log(erro)
-                return res.status(500).json(erro)
-            }
-
-            res.json(resultado)
+        if (erro) {
+            console.log(erro)
+            return res.status(500).json(erro)
         }
-    )
+
+        res.json(resultado)
+    })
 
 })
 

@@ -47,27 +47,38 @@ document.getElementById("btnConfirmarDelete")
         }
     })
 
-function fnExcluirUsuario(id) {
-    fetch('http://127.0.0.1:3000/usuarios/' + id, {
-        method: 'DELETE',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }
-    })
-        .then(resposta => resposta.json())
-        .then((dados) => {
+async function fnExcluirUsuario(id) {
 
-            const linha = document.getElementById(`linha-${id}`)
-            if (linha) {
-                linha.remove()
-            }
+    try {
 
-            document.activeElement.blur()
+        const res = await fetch('http://127.0.0.1:3000/usuarios/' + id, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
 
-            const modalElement = document.getElementById('deleteModal')
-            const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement)
-            modalInstance.hide()
-        })
-        .catch(erro => console.log(erro.message))
+        if (res.status === 403) {
+            alert("Você não tem permissão para excluir usuários");
+            return;
+        }
+
+        if (res.status === 401) {
+            alert("Sessão expirada.");
+            window.location.href = "../../LoginAdmin/login.html";
+            return;
+        }
+
+        const dados = await res.json();
+
+        const linha = document.getElementById(`linha-${id}`);
+        if (linha) linha.remove();
+
+        const modalElement = document.getElementById('deleteModal');
+        const modalInstance = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modalInstance.hide();
+
+    } catch (erro) {
+        console.log(erro.message);
+    }
 }
 
 function fnCarregarDados() {

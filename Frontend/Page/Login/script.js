@@ -14,6 +14,7 @@ function fnReservarCarro() {
     })
         .then(resposta => resposta.json())
         .then((dados) => {
+            fnMostrarToast()
             fnLimparCampos()
             console.log(dados)
         })
@@ -21,24 +22,37 @@ function fnReservarCarro() {
 }
 
 function fnLimparCampos() {
-    document.getElementById("form-reserva").reset()
+    const form = document.getElementById("form-reserva")
+    form.reset()
+    form.classList.remove("was-validated")
 }
 
 let btn_reserva = document.getElementById("btn-reserva")
 
 document.getElementById("form-reserva")
-.addEventListener("submit", function(e){
+    .addEventListener("submit", function (e) {
 
-    e.preventDefault()
+        e.preventDefault()
 
-    if (!this.checkValidity()) {
-        this.classList.add("was-validated")
-        return
-    }
+        if (!this.checkValidity()) {
+            this.classList.add("was-validated")
+            return
+        }
 
-    this.classList.add("was-validated")
-    fnReservarCarro()
-})
+        if (!this.checkValidity()) {
+            this.classList.add("was-validated")
+            return
+        }
+
+        fnReservarCarro()
+    })
+
+const toastLiveExample = document.getElementById('liveToast')
+
+function fnMostrarToast() {
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+    toastBootstrap.show()
+}
 
 const selectVeiculo = document.getElementById("categoria")
 const confirmCar = document.getElementById("confirm-car")
