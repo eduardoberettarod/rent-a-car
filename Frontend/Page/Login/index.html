@@ -42,13 +42,30 @@
                 <div class="col-12">
                     <label class="form-label">Selecione o tipo de veículo</label>
                     <select class="form-select" id="categoria" required>
-                        <option>Básico</option>
-                        <option>Família</option>
-                        <option>Luxo</option>
                     </select>
                 </div>
+
+                <div class="col-12 justify-content-center" id="confirm-car">
+                    <div class="confirm-car">
+                        <div class="confirm-header">
+                            <span class="confirm-label">Valor da reserva</span>
+                            <span class="confirm-price" id="valor_diaria"></span>
+                        </div>
+
+                        <label class="confirm-check">
+                            <input type="checkbox" required>
+                            <span>Estou ciente e concordo com o valor da reserva</span>
+                            <hr>
+                            <div class="invalid-feedback">
+                                Por favor confirme o valor.
+                            </div>
+                        </label>
+
+                    </div>
+                </div>
                 <div class="col-12">
-                    <button class="btn btn-warning py-2 w-100" type="submit" id="btn-reserva">FAZER MINHA RESERVA</button>
+                    <button class="btn btn-warning py-2 w-100" type="submit" id="btn-reserva">FAZER MINHA
+                        RESERVA</button>
                 </div>
             </form>
 

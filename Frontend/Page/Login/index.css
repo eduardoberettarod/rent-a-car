@@ -12,7 +12,8 @@
 }
 
 .card-login {
-    width: 400px;
+    position: relative;
+    width: 450px;
 }
 
 .titulo{
@@ -54,4 +55,63 @@
     justify-content: center;
     height: 100vh;
     background-color: #ffc107;
+}
+
+#confirm-car {
+    display: none;
+}
+
+.hidden {
+    display: none;
+}
+
+.confirm-car {
+    background: rgba(25, 135, 84, 0.15);
+    border: 1.5px solid rgba(25, 135, 84, 0.6);
+    color: #198754;
+    padding: 22px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: 0.2s ease;
+}
+
+.confirm-car:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.confirm-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.confirm-label {
+    font-size: 16px;
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.confirm-price {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.confirm-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.confirm-check input {
+    width: 18px;
+    height: 18px;
+    accent-color: #198754;
+    cursor: pointer;
 }

@@ -91,8 +91,43 @@
             </div>
         </div>
 
-        <div class="container-fluid">
-            <div class="row lista-usuarios"></div>
+        <div class="table-responsive">
+            <table class="table table-light table-bordered table-striped table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col" class="p-3">ID</th>
+                        <th scope="col" class="p-3">LOGIN</th>
+                        <th scope="col" class="p-3">NÍVEL DE ACESSO</th>
+                        <th scope="col" class="p-3">CRIADO EM</th>
+                        <th scope="col" class="p-3">AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-usuarios">
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal fade" id="deleteModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Confirmação de exclusão</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body py-4">
+                        Tem certeza que deseja excluir este usuário?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Fechar
+                        </button>
+                        <button type="button" class="btn btn-danger" id="btnConfirmarDelete">
+                            Excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>

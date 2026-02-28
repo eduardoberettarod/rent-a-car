@@ -32,7 +32,7 @@ app.get('/', function (req, res) {
 
 let mysql = require('mysql')
 let conexao = mysql.createConnection({
-    host: "localhost",
+    host: "10.125.44.41",
     user: "root",
     password: "",
     database: "bd_locadora"
@@ -56,6 +56,28 @@ app.post("/reserva/", function (req, res) {
         }
         res.send(resultado.insertId)
     });
+})
+
+app.get("/veiculos-select", function (req, res) {
+
+    conexao.query(`
+        SELECT 
+            v.id,
+            v.modelo,
+            c.nome AS categoria,
+            c.valor_diaria
+        FROM veiculos v
+        INNER JOIN categorias c
+            ON v.categoria_id = c.id
+        ORDER BY c.nome, v.modelo
+    `, function (erro, resultado) {
+
+        if (erro) {
+            return res.status(500).json(erro)
+        }
+
+        res.json(resultado)
+    })
 })
 
 app.get("/veiculos", verificarLogin, function (req, res) {
@@ -94,7 +116,7 @@ app.post("/veiculos", verificarLogin, function (req, res) {
     })
 })
 
-app.post("/usuarios", function (req, res) {
+app.post("/usuarios", verificarLogin, function (req, res) {
     const data = req.body;
     conexao.query('INSERT INTO usuarios set ?', [data], function (erro, resultado) {
         if (erro) {
@@ -106,7 +128,8 @@ app.post("/usuarios", function (req, res) {
 
 app.get("/usuarios", verificarLogin, function (req, res) {
     conexao.query(
-        `SELECT login,
+        `SELECT id,
+        login,
         nivel_acesso,
         criado_em 
         FROM usuarios`,
@@ -122,6 +145,26 @@ app.get("/usuarios", verificarLogin, function (req, res) {
     )
 })
 
+app.delete("/usuarios/:id", verificarLogin, function (req, res) {
+
+    const id = req.params.id;
+
+    conexao.query(
+        "DELETE FROM usuarios WHERE id = ?",
+        [id],
+        function (erro, resultado) {
+
+            if (erro) {
+                console.log(erro);
+                return res.status(500).json(erro);
+            }
+
+            res.json({ mensagem: "Usuário deletado", affectedRows: resultado.affectedRows });
+        }
+    );
+
+});
+
 app.post("/agendamentos", function (req, res) {
     const data = req.body;
     conexao.query('INSERT INTO agendamentos set ?', [data], function (erro, resultado) {
@@ -133,6 +176,7 @@ app.post("/agendamentos", function (req, res) {
 })
 
 app.get("/agendamentos", verificarLogin, function (req, res) {
+
     conexao.query(
         `SELECT id,
         nome_cliente,
@@ -140,17 +184,39 @@ app.get("/agendamentos", verificarLogin, function (req, res) {
         veiculo_id,
         data_reserva,
         valor_diaria_reserva
-        FROM agendamentos`
-    ), function (erro, resultado) {
+        FROM agendamentos`,
+        function (erro, resultado) {
 
-        if (erro) {
-            console.log(erro)
-            res.status(500).json(erro)
-        } else {
+            if (erro) {
+                console.log(erro)
+                return res.status(500).json(erro)
+            }
+
             res.json(resultado)
         }
-    }
+    )
+
 })
+
+app.delete("/agendamentos/:id", verificarLogin, function (req, res) {
+
+    const id = req.params.id;
+
+    conexao.query(
+        "DELETE FROM agendamentos WHERE id = ?",
+        [id],
+        function (erro, resultado) {
+
+            if (erro) {
+                console.log(erro);
+                return res.status(500).json(erro);
+            }
+
+            res.json({ mensagem: "Agendamento deletado", affectedRows: resultado.affectedRows });
+        }
+    );
+
+});
 
 
 app.post("/login", (req, res) => {
@@ -202,7 +268,7 @@ app.get("/admin", verificarLogin, (req, res) => {
 });
 
 function verificarAdmin(req, res, next) {
-    if (!req.session.usuario || req.session.usuario.nivel_acesso !== "Admin") {
+    if (!req.session.usuario || req.session.usuario.nivel_acesso !== "admin") {
         return res.status(403).json("Acesso negado");
     }
     next();
