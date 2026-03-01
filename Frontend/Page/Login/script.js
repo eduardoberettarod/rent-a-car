@@ -92,7 +92,6 @@ function carregarVeiculos() {
                 option.value = veiculo.id
                 option.textContent = `${veiculo.modelo} - ${veiculo.categoria}`
 
-                // 👇 guardando o valor da diária dentro do option
                 option.dataset.valor = veiculo.valor_diaria
 
                 select.appendChild(option)

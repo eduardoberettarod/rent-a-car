@@ -58,37 +58,46 @@ app.post("/reserva/", function (req, res) {
     });
 })
 
-app.post("/registro", async function (req, res) {
+app.post("/registro", async (req, res) => {
+
+    const { login, senha } = req.body;
+
+    if (!login || !senha) {
+        return res.status(400).json({ sucesso: false, mensagem: "Dados inválidos" });
+    }
 
     try {
-
-        const { login, senha } = req.body;
-
         const senhaHash = await bcrypt.hash(senha, 10);
 
         const novoUsuario = {
-            login: login,
+            login,
             senha: senhaHash,
             nivel_acesso: "operador"
         };
 
         conexao.query(
             "INSERT INTO usuarios SET ?",
-            [novoUsuario],
-            function (erro, resultado) {
+            novoUsuario,
+            (erro, resultado) => {
 
                 if (erro) {
                     console.log(erro);
-                    return res.status(500).json("Erro ao registrar usuário");
+                    return res.status(500).json({
+                        sucesso: false,
+                        mensagem: "Erro ao registrar usuário"
+                    });
                 }
 
-                res.json("Usuário registrado com sucesso");
+                res.status(201).json({
+                    sucesso: true,
+                    mensagem: "Usuário registrado com sucesso"
+                });
             }
         );
 
     } catch (erro) {
         console.log(erro);
-        res.status(500).json("Erro no servidor");
+        res.status(500).json({ sucesso: false, mensagem: "Erro no servidor" });
     }
 });
 
@@ -123,6 +132,7 @@ app.get("/veiculos", verificarLogin, function (req, res) {
             v.marca,
             v.placa,
             v.foto,
+            v.status,
             c.nome AS categoria,
             c.valor_diaria
         FROM veiculos v
@@ -201,13 +211,26 @@ app.delete("/usuarios/:id", verificarLogin, verificarAdmin, function (req, res) 
 
 app.post("/agendamentos", function (req, res) {
     const data = req.body;
-    conexao.query('INSERT INTO agendamentos set ?', [data], function (erro, resultado) {
-        if (erro) {
-            res.json(erro)
+
+    conexao.query(
+        'INSERT INTO agendamentos SET ?', 
+        [data], 
+        function (erro, resultado) {
+
+            if (erro) {
+                return res.status(500).json(erro);
+            }
+
+            // 🔥 Atualiza status do carro
+            conexao.query(
+                "UPDATE veiculos SET status = 'ocupado' WHERE id = ?",
+                [data.veiculo_id]
+            );
+
+            res.json({ sucesso: true });
         }
-        res.send(resultado.insertId)
-    })
-})
+    );
+});
 
 app.get("/agendamentos", verificarLogin, function (req, res) {
 
@@ -241,19 +264,32 @@ app.delete("/agendamentos/:id", verificarLogin, function (req, res) {
     const id = req.params.id;
 
     conexao.query(
-        "DELETE FROM agendamentos WHERE id = ?",
+        "SELECT veiculo_id FROM agendamentos WHERE id = ?",
         [id],
         function (erro, resultado) {
 
-            if (erro) {
-                console.log(erro);
-                return res.status(500).json(erro);
-            }
+            if (erro) return res.status(500).json(erro);
 
-            res.json({ mensagem: "Agendamento deletado", affectedRows: resultado.affectedRows });
+            const veiculo_id = resultado[0].veiculo_id;
+
+            conexao.query(
+                "DELETE FROM agendamentos WHERE id = ?",
+                [id],
+                function (erro2) {
+
+                    if (erro2) return res.status(500).json(erro2);
+
+                    // 🔥 volta para disponível
+                    conexao.query(
+                        "UPDATE veiculos SET status = 'disponivel' WHERE id = ?",
+                        [veiculo_id]
+                    );
+
+                    res.json({ sucesso: true });
+                }
+            );
         }
     );
-
 });
 
 

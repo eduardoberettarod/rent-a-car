@@ -42,6 +42,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
+    position: relative;
 }
 
 .card-car-header h4 {
@@ -93,4 +94,12 @@
     font-weight: 600;
     padding: 4px 10px;
     border-radius: 6px;
+}
+
+.status {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    border: 1px solid;
+    background-color: rgba(0,0,0,0.05);
 }

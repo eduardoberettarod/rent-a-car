@@ -14,6 +14,22 @@ inputFoto.addEventListener("input", () => {
 //conteudo para criar um card do novo veiculo
 function fnMontarCardCarro(veiculo) {
 
+    let corStatus = "";
+    let textoStatus = "";
+
+    if (veiculo.status === "disponivel") {
+        corStatus = "text-success border-success";
+        textoStatus = "Disponível";
+    }
+    else if (veiculo.status === "ocupado") {
+        corStatus = "text-danger border-danger";
+        textoStatus = "Ocupado";
+    }
+    else if (veiculo.status === "manutencao") {
+        corStatus = "text-warning border-warning";
+        textoStatus = "Manutenção";
+    }
+
     const valorBR = Number(veiculo.valor_diaria)
         .toLocaleString('pt-BR', { minimumFractionDigits: 2 })
 
@@ -27,6 +43,12 @@ function fnMontarCardCarro(veiculo) {
                     <div>
                         <h4>${veiculo.modelo}</h4>
                         <span class="text-muted">${veiculo.marca}</span>
+                        <div class="position-absolute top-0 end-0 me-2 mt-2">
+                            <span class="status ${corStatus}">
+                                ${textoStatus}
+                            </span>
+                        </div>
+                        
                     </div>
                 </div>
 
@@ -53,6 +75,7 @@ function fnMontarCardCarro(veiculo) {
                             <span class="categoria">${veiculo.categoria}</span>
                         </div>
                     </div>
+                    
                 </div>
 
             </div>
@@ -111,7 +134,7 @@ function fnCarregarDados() {
         method: 'GET',
         credentials: 'include'
     })
-    
+
         .then(response => {
 
             if (response.status === 401) {

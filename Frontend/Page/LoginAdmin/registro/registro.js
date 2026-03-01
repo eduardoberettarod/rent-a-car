@@ -1,24 +1,43 @@
-document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault()
+document.getElementById("form-registro")
+    .addEventListener("submit", function (e) {
 
-    const login = document.getElementById("usuario").value
-    const senha = document.getElementById("senha").value
+        e.preventDefault()
 
-    fetch("http://127.0.0.1:3000/registro", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "include",
-        body: JSON.stringify({ login, senha })
-    })
-        
-        .then(data => {
+        if (!this.checkValidity()) {
+            this.classList.add("was-validated")
+            return
+        }
 
-            if (!data) return;
+        const login = document.getElementById("usuario").value
+        const senha = document.getElementById("senha").value
 
-            window.location.href = "../login.html";
-
+        fetch("http://127.0.0.1:3000/registro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({ login, senha })
         })
-        .catch(err => console.log(err))
-})
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro ao registrar")
+                }
+                return response.json()
+            })
+            .then(data => {
+                console.log(data)
+                fnLimparCampos()
+                window.location.href = "../login.html"
+            })
+            .catch(err => {
+                console.log("ERRO:", err)
+                alert("Erro ao registrar usuário")
+            })
+    })
+
+function fnLimparCampos() {
+    const form = document.getElementById("form-registro")
+    form.reset()
+    form.classList.remove("was-validated")
+}
