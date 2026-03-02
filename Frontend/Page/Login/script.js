@@ -1,79 +1,143 @@
+// ===============================
+// ELEMENTOS GLOBAIS
+// ===============================
+
+const form = document.getElementById("form-reserva");
+const selectVeiculo = document.getElementById("categoria");
+const inputDias = document.getElementById("quantidade_dias");
+const confirmCar = document.getElementById("confirm-car");
+const confirmPrice = document.querySelector(".confirm-price");
+
+const toastLiveExample = document.getElementById("liveToast");
+const toastBody = document.querySelector("#liveToast .toast-body");
+
+
+// ===============================
+// RESERVAR CARRO
+// ===============================
+
 function fnReservarCarro() {
 
     let formDados = {
         nome_cliente: document.getElementById("nome_cliente").value,
         email_cliente: document.getElementById("email_cliente").value,
-        veiculo_id: document.getElementById("categoria").value
-    }
-    console.dir(formDados)
+        veiculo_id: selectVeiculo.value,
+        quantidade_dias: Number(inputDias.value)
+    };
 
-    fetch('http://localhost:3000/reserva/', {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
+    fetch("http://localhost:3000/agendamentos", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
         body: JSON.stringify(formDados)
     })
-        .then(resposta => resposta.json())
-        .then((dados) => {
-            fnMostrarToast()
-            fnLimparCampos()
-            console.log(dados)
-        })
-        .catch(erro => console.log(erro.message))
+    .then(async (res) => {
+
+        const dados = await res.json();
+
+        if (!res.ok) {
+            fnMostrarToast(dados.mensagem || "Erro ao realizar reserva", true);
+            return;
+        }
+
+        fnMostrarToast(
+            `Reserva realizada! Total: R$ ${Number(dados.valor_total).toFixed(2).replace(".", ",")}`,
+            false
+        );
+
+        fnLimparCampos();
+    })
+    .catch(() => {
+        fnMostrarToast("Erro de conexão com o servidor", true);
+    });
 }
+
+
+// ===============================
+// LIMPAR CAMPOS
+// ===============================
 
 function fnLimparCampos() {
-    const form = document.getElementById("form-reserva")
-    form.reset()
-    form.classList.remove("was-validated")
+    form.reset();
+    form.classList.remove("was-validated");
+    confirmCar.style.display = "none";
 }
 
-let btn_reserva = document.getElementById("btn-reserva")
 
-document.getElementById("form-reserva")
-    .addEventListener("submit", function (e) {
+// ===============================
+// SUBMIT FORMULÁRIO
+// ===============================
 
-        e.preventDefault()
+form.addEventListener("submit", function (e) {
 
-        if (!this.checkValidity()) {
-            this.classList.add("was-validated")
-            return
-        }
+    e.preventDefault();
 
-        if (!this.checkValidity()) {
-            this.classList.add("was-validated")
-            return
-        }
-
-        fnReservarCarro()
-    })
-
-const toastLiveExample = document.getElementById('liveToast')
-
-function fnMostrarToast() {
-    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-    toastBootstrap.show()
-}
-
-const selectVeiculo = document.getElementById("categoria")
-const confirmCar = document.getElementById("confirm-car")
-const confirmPrice = document.querySelector(".confirm-price")
-
-selectVeiculo.addEventListener("change", function () {
-
-    const optionSelecionada = this.options[this.selectedIndex]
-
-    if (this.value === "") {
-
-        confirmCar.style.display = "none"
-        return
+    if (!this.checkValidity()) {
+        this.classList.add("was-validated");
+        return;
     }
 
-    const valor = optionSelecionada.dataset.valor
+    fnReservarCarro();
+});
 
-    confirmPrice.textContent = `R$ ${Number(valor).toFixed(2).replace(".", ",")}`
 
-    confirmCar.style.display = "flex"
-})
+// ===============================
+// TOAST
+// ===============================
+
+function fnMostrarToast(mensagem, isErro) {
+
+    toastBody.textContent = mensagem;
+
+    toastLiveExample.classList.remove("text-bg-success", "text-bg-danger");
+
+    if (isErro) {
+        toastLiveExample.classList.add("text-bg-danger");
+    } else {
+        toastLiveExample.classList.add("text-bg-success");
+    }
+
+    const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+    toastBootstrap.show();
+}
+
+
+// ===============================
+// ATUALIZAR PREÇO DINAMICAMENTE
+// ===============================
+
+function atualizarPreco() {
+
+    const optionSelecionada =
+        selectVeiculo.options[selectVeiculo.selectedIndex];
+
+    if (!selectVeiculo.value) {
+        confirmCar.style.display = "none";
+        return;
+    }
+
+    const valorDiaria = Number(optionSelecionada.dataset.valor);
+    const dias = Number(inputDias.value);
+
+    if (!dias || dias <= 0) {
+        confirmCar.style.display = "none";
+        return;
+    }
+
+    const total = valorDiaria * dias;
+
+    confirmPrice.textContent =
+        `R$ ${total.toFixed(2).replace(".", ",")}`;
+
+    confirmCar.style.display = "flex";
+}
+
+selectVeiculo.addEventListener("change", atualizarPreco);
+inputDias.addEventListener("input", atualizarPreco);
+
+
+// ===============================
+// CARREGAR VEÍCULOS NO SELECT
+// ===============================
 
 function carregarVeiculos() {
 
@@ -81,23 +145,25 @@ function carregarVeiculos() {
         .then(res => res.json())
         .then(dados => {
 
-            const select = document.getElementById("categoria")
-
-            select.innerHTML = '<option value="">Selecione um veículo</option>'
+            selectVeiculo.innerHTML =
+                '<option value="">Selecione um veículo</option>';
 
             dados.forEach(veiculo => {
 
-                const option = document.createElement("option")
+                const option = document.createElement("option");
 
-                option.value = veiculo.id
-                option.textContent = `${veiculo.modelo} - ${veiculo.categoria}`
+                option.value = veiculo.id;
+                option.textContent =
+                    `${veiculo.modelo} - ${veiculo.categoria}`;
 
-                option.dataset.valor = veiculo.valor_diaria
+                option.dataset.valor = veiculo.valor_diaria;
 
-                select.appendChild(option)
-            })
+                selectVeiculo.appendChild(option);
+            });
         })
-        .catch(erro => console.log(erro))
+        .catch(() => {
+            fnMostrarToast("Erro ao carregar veículos", true);
+        });
 }
 
-carregarVeiculos()
+carregarVeiculos();

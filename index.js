@@ -47,17 +47,6 @@ conexao.connect(function (erro) {
     }
 })
 
-app.post("/reserva/", function (req, res) {
-
-    const data = req.body;
-    conexao.query('INSERT INTO agendamentos set ?', [data], function (erro, resultado) {
-        if (erro) {
-            res.json(erro);
-        }
-        res.send(resultado.insertId)
-    });
-})
-
 app.post("/registro", async (req, res) => {
 
     const { login, senha } = req.body;
@@ -160,16 +149,6 @@ app.post("/veiculos", verificarLogin, function (req, res) {
     })
 })
 
-app.post("/usuarios", verificarLogin, function (req, res) {
-    const data = req.body;
-    conexao.query('INSERT INTO usuarios set ?', [data], function (erro, resultado) {
-        if (erro) {
-            res.json(erro)
-        }
-        res.send(resultado.insertId)
-    })
-})
-
 app.get("/usuarios", verificarLogin, function (req, res) {
     conexao.query(
         `SELECT id,
@@ -210,24 +189,104 @@ app.delete("/usuarios/:id", verificarLogin, verificarAdmin, function (req, res) 
 });
 
 app.post("/agendamentos", function (req, res) {
+
     const data = req.body;
 
+    const dias = Number(data.quantidade_dias);
+
+    // 🔎 1 - Valida quantidade de dias
+    if (!dias || dias <= 0) {
+        return res.status(400).json({
+            sucesso: false,
+            mensagem: "Quantidade de dias inválida"
+        });
+    }
+
+    // 🔎 2 - Verifica status do veículo
     conexao.query(
-        'INSERT INTO agendamentos SET ?', 
-        [data], 
+        "SELECT status FROM veiculos WHERE id = ?",
+        [data.veiculo_id],
         function (erro, resultado) {
 
             if (erro) {
-                return res.status(500).json(erro);
+                return res.status(500).json({ mensagem: "Erro ao verificar veículo" });
             }
 
-            // 🔥 Atualiza status do carro
-            conexao.query(
-                "UPDATE veiculos SET status = 'ocupado' WHERE id = ?",
-                [data.veiculo_id]
-            );
+            if (resultado.length === 0) {
+                return res.status(404).json({ mensagem: "Veículo não encontrado" });
+            }
 
-            res.json({ sucesso: true });
+            const status = resultado[0].status;
+
+            if (status === "ocupado") {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: "Veículo já está ocupado"
+                });
+            }
+
+            if (status === "manutencao") {
+                return res.status(400).json({
+                    sucesso: false,
+                    mensagem: "Veículo está em manutenção"
+                });
+            }
+
+            // 🔎 3 - Buscar valor da diária
+            conexao.query(
+                `SELECT c.valor_diaria
+                 FROM veiculos v
+                 INNER JOIN categorias c ON v.categoria_id = c.id
+                 WHERE v.id = ?`,
+                [data.veiculo_id],
+                function (erroValor, resultadoValor) {
+
+                    if (erroValor) {
+                        return res.status(500).json(erroValor);
+                    }
+
+                    const valorDiaria = resultadoValor[0].valor_diaria;
+                    const valorTotal = valorDiaria * dias;
+
+                    // ✅ 4 - Inserir agendamento
+                    conexao.query(
+                        `INSERT INTO agendamentos
+                         (nome_cliente, email_cliente, veiculo_id, quantidade_dias, valor_total)
+                         VALUES (?, ?, ?, ?, ?)`,
+                        [
+                            data.nome_cliente,
+                            data.email_cliente,
+                            data.veiculo_id,
+                            dias,
+                            valorTotal
+                        ],
+                        function (erroInsert) {
+
+                            if (erroInsert) {
+                                return res.status(500).json(erroInsert);
+                            }
+
+                            // 🔥 5 - Atualizar status do veículo
+                            conexao.query(
+                                "UPDATE veiculos SET status = 'ocupado' WHERE id = ?",
+                                [data.veiculo_id],
+                                function (erroUpdate) {
+
+                                    if (erroUpdate) {
+                                        return res.status(500).json(erroUpdate);
+                                    }
+
+                                    res.json({
+                                        sucesso: true,
+                                        mensagem: "Reserva realizada com sucesso",
+                                        valor_total: valorTotal
+                                    });
+                                }
+                            );
+                        }
+                    );
+                }
+            );
         }
     );
 });
@@ -240,24 +299,29 @@ app.get("/agendamentos", verificarLogin, function (req, res) {
             a.nome_cliente,
             a.email_cliente,
             a.veiculo_id,
+            a.quantidade_dias,
+            a.valor_total,
             a.created_at,
-            c.valor_diaria AS valor_diaria_reserva
+            v.modelo,
+            c.nome AS categoria,
+            c.valor_diaria
         FROM agendamentos a
         INNER JOIN veiculos v 
             ON a.veiculo_id = v.id
         INNER JOIN categorias c 
             ON v.categoria_id = c.id
+        ORDER BY a.created_at DESC
     `, function (erro, resultado) {
 
         if (erro) {
-            console.log(erro)
-            return res.status(500).json(erro)
+            console.log(erro);
+            return res.status(500).json(erro);
         }
 
-        res.json(resultado)
-    })
+        res.json(resultado);
+    });
 
-})
+});
 
 app.delete("/agendamentos/:id", verificarLogin, function (req, res) {
 
@@ -271,6 +335,9 @@ app.delete("/agendamentos/:id", verificarLogin, function (req, res) {
             if (erro) return res.status(500).json(erro);
 
             const veiculo_id = resultado[0].veiculo_id;
+            if (resultado.length === 0) {
+                return res.status(404).json({ mensagem: "Agendamento não encontrado" });
+            }
 
             conexao.query(
                 "DELETE FROM agendamentos WHERE id = ?",

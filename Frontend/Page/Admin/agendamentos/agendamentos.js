@@ -12,7 +12,15 @@ function fnMontarTabelaAgendamento(cliente) {
 
             <td class="py-2 text-center align-middle">${new Date(cliente.created_at).toLocaleDateString('pt-BR')}</td>
 
-            <td class="py-2 text-center align-middle">${cliente.valor_diaria_reserva}</td>
+            <td class="py-2 text-center align-middle">
+                ${Number(cliente.valor_diaria).toFixed(2).replace(".", ",")}
+            </td>
+            
+            <td class="py-2 text-center align-middle">${cliente.quantidade_dias}</td>
+           
+            <td class="py-2 text-center align-middle">
+                ${Number(cliente.valor_total).toFixed(2).replace(".", ",")}
+            </td>
 
             <td class="py-2 align-middle">
                 <div class="d-flex justify-content-center align-items-center">    

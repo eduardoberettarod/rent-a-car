@@ -23,7 +23,7 @@ function fnMontarCardCarro(veiculo) {
     }
     else if (veiculo.status === "ocupado") {
         corStatus = "text-danger border-danger";
-        textoStatus = "Ocupado";
+        textoStatus = "Reservado";
     }
     else if (veiculo.status === "manutencao") {
         corStatus = "text-warning border-warning";

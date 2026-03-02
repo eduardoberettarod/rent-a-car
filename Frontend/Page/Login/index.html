@@ -15,8 +15,9 @@
     <main class="tudo">
 
         <div class="card card-login p-4">
-
-            <img src="../../image/icone.png" alt="ícone de caminhão" class="icone">
+            <a href="../LoginAdmin/login.html" class="pt-4">
+                <img src="../../image/icone.png" alt="ícone de caminhão" class="icone">
+            </a>
 
             <div class="text-center">
                 <h2 class="titulo">Encontre o veículo certo para você!</h2>
@@ -26,7 +27,7 @@
             <form class="row g-3 needs-validation" id="form-reserva" novalidate>
                 <div class="col-12">
                     <label class="form-label">Nome</label>
-                    <input type="text" class="form-control" id="nome_cliente" required>
+                    <input type="text" class="form-control" id="nome_cliente" required />
                     <div class="invalid-feedback">
                         Por favor insira um nome válido.
                     </div>
@@ -34,7 +35,7 @@
 
                 <div class="col-12">
                     <label class="form-label">E-mail</label>
-                    <input type="email" class="form-control" id="email_cliente" required>
+                    <input type="email" class="form-control" id="email_cliente" required />
                     <div class="invalid-feedback">
                         Por favor insira um email válido.
                     </div>
@@ -44,6 +45,17 @@
                     <label class="form-label">Selecione o tipo de veículo</label>
                     <select class="form-select" id="categoria" required>
                     </select>
+                    <div class="invalid-feedback">
+                        Por favor escolha um carro válido.
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Selecione o tipo de veículo</label>
+                    <input class="form-control" type="number" min="1" value="1" id="quantidade_dias" required />
+                    <div class="invalid-feedback">
+                        Por favor insira uma quantidade de dias válida.
+                    </div>
                 </div>
 
                 <div class="col-12 justify-content-center" id="confirm-car">
@@ -77,14 +89,14 @@
             <img src="../../image/renault-kwid.png" alt="Renault Kwid">
         </div>
 
-        <div class="toast-container position-fixed bottom-0 end-0 p-3">
-            <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                    <strong class="me-auto">Reservado <i class="bi bi-check2-circle"></i></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    Carro reservado com sucesso!
+        <!-- Toast -->
+        <div class="toast-container position-fixed top-0 end-0 p-3">
+            <div id="liveToast" class="toast align-items-center border-0" role="alert">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        Mensagem aqui
+                    </div>
+                    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast"></button>
                 </div>
             </div>
         </div>
