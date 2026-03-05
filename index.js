@@ -32,7 +32,7 @@ app.get('/', function (req, res) {
 
 let mysql = require('mysql')
 let conexao = mysql.createConnection({
-    host: "localhost",
+    host: "10.125.44.41",
     user: "root",
     password: "",
     database: "bd_locadora"
@@ -137,7 +137,48 @@ app.get("/veiculos", verificarLogin, function (req, res) {
         }
 
     })
-})
+});
+
+app.put("/veiculos/:id", verificarLogin, verificarAdmin, function (req, res) {
+
+    const id = req.params.id;
+    const data = req.body;
+
+    conexao.query(
+        "UPDATE veiculos SET ? WHERE id = ?",
+        [data, id],
+        function (erro, resultado) {
+
+            if (erro) {
+                return res.status(500).json(erro);
+            }
+
+            res.json({ sucesso: true, mensagem: "Atualizado com sucesso!" });
+        }
+    );
+});
+
+app.get("/veiculos/:id", verificarLogin, function (req, res) {
+
+    const id = req.params.id;
+
+    conexao.query(
+        "SELECT * FROM veiculos WHERE id = ?",
+        [id],
+        function (erro, resultado) {
+
+            if (erro) {
+                return res.status(500).json(erro);
+            }
+
+            if (resultado.length === 0) {
+                return res.status(404).json({ mensagem: "Veículo não encontrado" });
+            }
+
+            res.json(resultado[0]);
+        }
+    );
+});
 
 app.post("/veiculos", verificarLogin, function (req, res) {
     const data = req.body;
@@ -194,7 +235,7 @@ app.post("/agendamentos", function (req, res) {
 
     const dias = Number(data.quantidade_dias);
 
-    // 🔎 1 - Valida quantidade de dias
+    // valida quantidade de dias
     if (!dias || dias <= 0) {
         return res.status(400).json({
             sucesso: false,
@@ -202,7 +243,7 @@ app.post("/agendamentos", function (req, res) {
         });
     }
 
-    // 🔎 2 - Verifica status do veículo
+    // verifica status do veículo
     conexao.query(
         "SELECT status FROM veiculos WHERE id = ?",
         [data.veiculo_id],
@@ -232,7 +273,7 @@ app.post("/agendamentos", function (req, res) {
                 });
             }
 
-            // 🔎 3 - Buscar valor da diária
+            // buscar valor da diária
             conexao.query(
                 `SELECT c.valor_diaria
                  FROM veiculos v
@@ -248,7 +289,7 @@ app.post("/agendamentos", function (req, res) {
                     const valorDiaria = resultadoValor[0].valor_diaria;
                     const valorTotal = valorDiaria * dias;
 
-                    // ✅ 4 - Inserir agendamento
+                    // inserir agendamento
                     conexao.query(
                         `INSERT INTO agendamentos
                          (nome_cliente, email_cliente, veiculo_id, quantidade_dias, valor_total)
@@ -266,7 +307,7 @@ app.post("/agendamentos", function (req, res) {
                                 return res.status(500).json(erroInsert);
                             }
 
-                            // 🔥 5 - Atualizar status do veículo
+                            // atualizar status do veículo
                             conexao.query(
                                 "UPDATE veiculos SET status = 'ocupado' WHERE id = ?",
                                 [data.veiculo_id],
@@ -346,7 +387,7 @@ app.delete("/agendamentos/:id", verificarLogin, function (req, res) {
 
                     if (erro2) return res.status(500).json(erro2);
 
-                    // 🔥 volta para disponível
+                    // volta para disponível
                     conexao.query(
                         "UPDATE veiculos SET status = 'disponivel' WHERE id = ?",
                         [veiculo_id]
@@ -419,10 +460,17 @@ app.get("/painel-admin", verificarAdmin, (req, res) => {
     res.json("Bem-vindo Admin");
 });
 
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.json("Logout realizado");
-});
+app.get("/usuario-logado", verificarLogin, function (req, res) {
 
+    if (!req.session.usuario) {
+        return res.status(401).json({ mensagem: "Não autenticado" });
+    }
+
+    res.json({
+        id: req.session.usuario.id,
+        login: req.session.usuario.login,
+        nivel_acesso: req.session.usuario.nivel_acesso
+    });
+});
 
 app.listen(3000)

@@ -1,3 +1,91 @@
+//editar veiculo
+
+let idEditar = null;
+
+function fnValidarBotao(botao) {
+
+    const Modalh1 = document.getElementById("CadastroCarroModalLabel");
+
+    btn_cadastrar.onclick = null;
+
+    if (botao.dataset.tipobotao === "editar") {
+
+        idEditar = botao.dataset.id;
+
+        Modalh1.innerHTML = "Edite um carro da nossa frota.";
+        btn_cadastrar.innerHTML = "Salvar Alterações";
+
+        btn_cadastrar.onclick = fnSalvarVeiculo;
+
+        // 🔥 BUSCAR DADOS DO VEÍCULO
+        fetch('http://127.0.0.1:3000/veiculos/' + idEditar, {
+            method: 'GET',
+            credentials: 'include'
+        })
+            .then(res => res.json())
+            .then(veiculo => {
+                fnMontarVeiculo(veiculo);
+            })
+            .catch(erro => console.log(erro));
+
+    } else {
+
+        idEditar = null;
+
+        document.getElementById("formCarro").reset();
+
+        document.getElementById("preview-foto").style.backgroundImage =
+            "url('../../../image/fundo.jpeg')";
+
+        Modalh1.innerHTML = "Cadastro para um novo carro.";
+        btn_cadastrar.innerHTML = "Cadastrar";
+
+        btn_cadastrar.onclick = fnCadastrarVeiculos;
+    }
+}
+
+function fnSalvarVeiculo() {
+
+    let formDados = {
+        modelo: document.getElementById("modelo").value,
+        marca: document.getElementById("marca").value,
+        placa: document.getElementById("placa").value,
+        foto: document.getElementById("foto").value,
+        categoria_id: document.getElementById("categoria").value
+    };
+
+    fetch('http://127.0.0.1:3000/veiculos/' + idEditar, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: { 'Content-type': 'application/json' },
+        body: JSON.stringify(formDados)
+    })
+        .then(res => res.json())
+        .then(dados => {
+
+            fnCarregarDados();
+            fnLimparCampos();
+            idEditar = null;
+
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('CadastroCarroModal')
+            );
+
+            if (modal) modal.hide();
+        })
+        .catch(erro => console.log(erro));
+}
+
+function fnMontarVeiculo(veiculo) {
+
+    document.getElementById("preview-foto").style.backgroundImage = `url(${veiculo.foto})`
+    document.getElementById("foto").value = veiculo.foto
+    document.getElementById("modelo").value = veiculo.modelo
+    document.getElementById("marca").value = veiculo.marca
+    document.getElementById("placa").value = veiculo.placa
+    document.getElementById("categoria").value = veiculo.categoria_id
+}
+
 //Background do modal
 const inputFoto = document.getElementById("foto")
 const preview = document.getElementById("preview-foto")
@@ -73,6 +161,14 @@ function fnMontarCardCarro(veiculo) {
 
                         <div class="col-6">
                             <span class="categoria">${veiculo.categoria}</span>
+                            <button class="btn btn-warning editar"
+                                data-id="${veiculo.id}"
+                                data-tipobotao="editar"
+                                data-bs-toggle="modal"
+                                data-bs-target="#CadastroCarroModal"
+                                onclick="fnValidarBotao(this)">
+                                <i class="bi bi-pencil-square"></i>
+                            </button>
                         </div>
                     </div>
                     
@@ -87,15 +183,15 @@ function fnMontarCardCarro(veiculo) {
 
 //Limpar o formulario após o cadastro de um veiculo
 function fnLimparCampos() {
-    document.getElementById("formCadastroCarro").reset()
+
+    document.getElementById("formCarro").reset();
+
+    document.getElementById("preview-foto").style.backgroundImage =
+        "url('../../../image/fundo.jpeg')";
 }
 
 //Cadastrar Veiculo
 let btn_cadastrar = document.getElementById("btn-cadastrar-veiculo")
-
-btn_cadastrar.addEventListener("click", function () {
-    fnCadastrarVeiculos()
-})
 
 //cadastrar um novo veiculo
 function fnCadastrarVeiculos() {
@@ -120,6 +216,11 @@ function fnCadastrarVeiculos() {
         .then((dados) => {
             fnLimparCampos()
             console.log(dados)
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('CadastroCarroModal')
+            );
+
+            if (modal) modal.hide();
         })
         .catch(erro => console.log(erro.message))
 }

@@ -57,11 +57,11 @@
 
         <div class="sidebar-footer">
             <div>
-                <span class="fw-bold">
-                    Nome de Usuario
+                <span class="fw-bold" id="nome-usuario-logado">
+                    Carregando...
                 </span>
-                <span>
-                    Cargo
+                <span class="text-muted" id="nivel-usuario-logado">
+                    Carregando...
                 </span>
             </div>
 
@@ -85,7 +85,7 @@
 
             <div>
                 <button class="d-flex align-items-center btn btn-warning gap-2 rounded-3" id="btn-cadastrar-carro"
-                    data-bs-toggle="modal" data-bs-target="#CadastroCarroModal">
+                    data-bs-toggle="modal" data-bs-target="#CadastroCarroModal" data-tipoBotao="cadastrar" onclick="fnValidarBotao(this)">
                     Cadastrar novo carro <i class="bi bi-plus fs-5"></i>
                 </button>
             </div>
@@ -98,7 +98,7 @@
             </div>
 
             <div>
-                <div class="dropdown">
+                <!-- <div class="dropdown">
                     <button class="btn btn-warning gap-2 rounded-3 dropdown-toggle" data-bs-toggle="dropdown"
                         aria-expanded="false" id="btn-filtro">
                         Filtro
@@ -108,7 +108,7 @@
                         <li><a class="dropdown-item" href="#">Família</a></li>
                         <li><a class="dropdown-item" href="#">Luxo</a></li>
                     </ul>
-                </div>
+                </div> -->
             </div>
         </div>
 
@@ -125,7 +125,7 @@
             <div class="modal-content">
                 <div class="modal-header p-4">
                     <h1 class="modal-title fs-5" id="CadastroCarroModalLabel">
-                        Cadastro para um novo carro.
+                        
                     </h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -145,7 +145,7 @@
                         <!-- LADO DIREITO - FORM -->
                         <div class="col-md-6">
 
-                            <form id="formCadastroCarro" class="row g-3">
+                            <form id="formCarro" class="row g-3">
 
                                 <div class="col-12">
                                     <label for="modelo" class="form-label">
@@ -176,8 +176,8 @@
                                             Selecione a categoria
                                         </option>
                                         <option value="1">Básico</option>
-                                        <option value="2">Luxo</option>
-                                        <option value="3">Família</option>
+                                        <option value="3">Luxo</option>
+                                        <option value="2">Família</option>
                                     </select>
                                 </div>
 
@@ -199,7 +199,7 @@
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
 
                     <button type="button" class="btn" id="btn-cadastrar-veiculo" style="background-color:#ffc20c; font-weight:600;">
-                        Cadastrar
+                        
                     </button>
                 </div>
             </div>
